@@ -1,51 +1,62 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState, ChangeEvent } from 'react'
+import './App.css'
+import { Container, Grid, Button } from '@material-ui/core'
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined'
+
+type Task = {
+  id: string
+  name: string
+}
 
 export const FormContent = () => {
 
-  type TaskObject = {
-    id: number
-    name: string
-  }
-
-  const [taskList, setTaskList] = useState<Array<TaskObject>>([])
-  const [taskName, setTaskName] = useState('')
+  const [taskList, setTaskList] = useState<Task[]>([])
+  const [taskName, setTaskName] = useState<string>('')
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    console.log(taskName, setTaskName)
-
     setTaskList([...taskList,
     {
-      id: taskList.length,
+      id: Date.now().toString(),
       name: taskName
-    }
-    ])
+    }])
     setTaskName('')
+
+  }
+
+  const handleDelete = (id: string) => {
+    const updatedTaskList: Task[] = taskList.filter((task: Task) => task.id !== id)
+    setTaskList(updatedTaskList)
   }
 
   return (
     <div>
-      <header className="header">
-        <span>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={taskName}
-              onChange={e => setTaskName(e.target.value)}
-            >
-            </input>
-          </form>
-        </span>
-      </header>
+      <Container>
+        <form onSubmit={handleSubmit}>
+          <input
+            placeholder='Add a Task'
+            type='text'
+            value={taskName}
+            onChange={e => setTaskName(e.target.value)}
+          />
+          <Button variant='contained' onClick={handleSubmit}>Add</Button>
+        </form>
 
+        <Grid container>
+          {taskList.map(task => (
+            <Grid item key={task.id + 1} xs={12}>
+              <input
+                type='text'
+                value={task.name}
+                onChange={() => { }}
+              />
+              {console.log(task.id)}
+              <Button><DeleteOutlinedIcon onClick={() => { handleDelete(task.id) }} /></Button>
+            </Grid>
+          ))}
+        </Grid>
 
-      <div>
-        {taskList.map(task => (
-          <div key={task.id}>{task.name}</div>
-        ))}
-      </div>
-
+      </Container>
     </div>
   );
 }
