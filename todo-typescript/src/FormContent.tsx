@@ -15,13 +15,14 @@ export const FormContent = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    setTaskList([...taskList,
-    {
-      id: Date.now().toString(),
-      name: taskName
-    }])
-    setTaskName('')
-
+    if (taskName !== '') {
+      setTaskList([...taskList,
+      {
+        id: Date.now().toString(),
+        name: taskName
+      }])
+      setTaskName('')
+    }
   }
 
   const handleUpdate = (e: any, id: string) => {
@@ -63,4 +64,3 @@ export const FormContent = () => {
     </Container>
   );
 }
-
