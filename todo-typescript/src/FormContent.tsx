@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
-import './App.css'
 import { Container, Grid, Button } from '@material-ui/core'
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined'
 
 type Task = {
   id: string
   name: string
+  isCompleted: boolean
 }
 
 export const FormContent = () => {
 
   const [taskList, setTaskList] = useState<Task[]>([])
   const [taskName, setTaskName] = useState<string>('')
+  const [isCompleted] = useState<boolean>(false)
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
@@ -19,7 +22,8 @@ export const FormContent = () => {
       setTaskList([...taskList,
       {
         id: Date.now().toString(),
-        name: taskName
+        name: taskName,
+        isCompleted: isCompleted
       }])
       setTaskName('')
     }
@@ -27,13 +31,8 @@ export const FormContent = () => {
 
   const handleUpdate = (e: any, id: string) => {
     const updatedTaskList: Task[] = [...taskList]
-    updatedTaskList.filter((task: Task) => task.id === id ? task.name = e.target.value : null)
-    setTaskList(updatedTaskList)
-  }
-
-  const handleUpdate = (e: any, id: string) => {
-    const updatedTaskList: Task[] = [...taskList]
-    updatedTaskList.filter((task: Task) => task.id === id ? task.name = e.target.value : null)
+    // updatedTaskList.filter((task: Task) => task.id === id ? task.name = e.target.value : null)
+    updatedTaskList.find((task: Task) => task.id === id ? task.name = e.target.value : null)
     setTaskList(updatedTaskList)
   }
 
@@ -42,32 +41,13 @@ export const FormContent = () => {
     setTaskList(updatedTaskList)
   }
 
-  return (
-<<<<<<< HEAD
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder='Add a Task'
-          type='text'
-          value={taskName}
-          onChange={e => setTaskName(e.target.value)}
-        />
-        <Button variant='contained' onClick={handleSubmit}>Add</Button>
-      </form>
+  const toggleComplete = (id: string) => {
+    const updatedTaskList: Task[] = [...taskList]
+    updatedTaskList.find((task: Task) => task.id === id ? task.isCompleted = !task.isCompleted : null)
+    setTaskList(updatedTaskList)
+  }
 
-      <Grid container>
-        {taskList.map(task => (
-          <Grid item key={task.id} xs={12}>
-            <input
-              type='text'
-              value={task.name}
-              onChange={(e) => handleUpdate(e, task.id)}
-            />
-            <Button><DeleteOutlinedIcon onClick={() => { handleDelete(task.id) }} /></Button>
-          </Grid>
-        ))}
-      </Grid>
-=======
+  return (
     <div>
       <Container>
         <form onSubmit={handleSubmit}>
@@ -83,6 +63,9 @@ export const FormContent = () => {
         <Grid container>
           {taskList.map(task => (
             <Grid item key={task.id} xs={12}>
+              {task.isCompleted === false ?
+                <RadioButtonUncheckedIcon onClick={() => { toggleComplete(task.id) }} /> :
+                <CheckCircleOutlineIcon onClick={() => { toggleComplete(task.id) }} />}
               <input
                 type='text'
                 value={task.name}
@@ -95,10 +78,5 @@ export const FormContent = () => {
 
       </Container>
     </div>
-  );
-}
->>>>>>> 73ea241e923b9bda447e5127512e0f1677391241
-
-    </Container>
   );
 }
