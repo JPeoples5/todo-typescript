@@ -14,7 +14,8 @@ export const FormContent = () => {
 
   const [taskList, setTaskList] = useState<Task[]>([])
   const [taskName, setTaskName] = useState<string>('')
-  const [isCompleted] = useState<boolean>(false)
+
+  const isCompleted: boolean = false
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
@@ -31,7 +32,6 @@ export const FormContent = () => {
 
   const handleUpdate = (e: any, id: string) => {
     const updatedTaskList: Task[] = [...taskList]
-    // updatedTaskList.filter((task: Task) => task.id === id ? task.name = e.target.value : null)
     updatedTaskList.find((task: Task) => task.id === id ? task.name = e.target.value : null)
     setTaskList(updatedTaskList)
   }
