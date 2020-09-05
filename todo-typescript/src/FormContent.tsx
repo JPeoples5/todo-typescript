@@ -1,38 +1,38 @@
 import React, { useState } from 'react'
-import { Container, Grid, Button } from '@material-ui/core'
+import { Container, Grid, Button, Paper } from '@material-ui/core'
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined'
 
 type Task = {
   id: string
-  name: string
+  text: string
   isCompleted: boolean
 }
 
 export const FormContent = () => {
 
   const [taskList, setTaskList] = useState<Task[]>([])
-  const [taskName, setTaskName] = useState<string>('')
+  const [taskText, setTaskText] = useState<string>('')
 
   const isCompleted: boolean = false
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    if (taskName !== '') {
+    if (taskText !== '') {
       setTaskList([...taskList,
       {
         id: Date.now().toString(),
-        name: taskName,
+        text: taskText,
         isCompleted: isCompleted
       }])
-      setTaskName('')
+      setTaskText('')
     }
   }
 
   const handleUpdate = (e: any, id: string) => {
     const updatedTaskList: Task[] = [...taskList]
-    updatedTaskList.find((task: Task) => task.id === id ? task.name = e.target.value : null)
+    updatedTaskList.find((task: Task) => task.id === id ? task.text = e.target.value : null)
     setTaskList(updatedTaskList)
   }
 
@@ -48,35 +48,37 @@ export const FormContent = () => {
   }
 
   return (
-    <div>
-      <Container>
-        <form onSubmit={handleSubmit}>
-          <input
-            placeholder='Add a Task'
-            type='text'
-            value={taskName}
-            onChange={e => setTaskName(e.target.value)}
-          />
-          <Button variant='contained' onClick={handleSubmit}>Add</Button>
-        </form>
 
-        <Grid container>
-          {taskList.map(task => (
-            <Grid item key={task.id} xs={12}>
-              {task.isCompleted === false ?
-                <RadioButtonUncheckedIcon onClick={() => { toggleComplete(task.id) }} /> :
-                <CheckCircleOutlineIcon onClick={() => { toggleComplete(task.id) }} />}
+    <Container>
+      <Paper elevation={3}>
+        <Grid id='task-input' container xs={12} justify='center'>
+          <form onSubmit={handleSubmit}>
+            <input
+              placeholder='Add a Task'
+              type='text'
+              value={taskText}
+              onChange={e => setTaskText(e.target.value)}
+            />
+            <Button variant='contained' onClick={handleSubmit}>Add</Button>
+          </form>
+        </Grid>
+
+        {taskList.map(task => (
+          <Grid id='task-list-container' container key={task.id} xs={12} justify='center'>
+            <Grid id='task' direction='column' justify='center'>
+              {!task.isCompleted ?
+                <Button><RadioButtonUncheckedIcon onClick={() => { toggleComplete(task.id) }} /></Button> :
+                <Button><CheckCircleOutlineIcon onClick={() => { toggleComplete(task.id) }} /></Button>}
               <input
                 type='text'
-                value={task.name}
+                value={task.text}
                 onChange={(e) => handleUpdate(e, task.id)}
               />
               <Button><DeleteOutlinedIcon onClick={() => { handleDelete(task.id) }} /></Button>
             </Grid>
-          ))}
-        </Grid>
-
-      </Container>
-    </div>
+          </Grid>
+        ))}
+      </Paper>
+    </Container>
   );
 }
