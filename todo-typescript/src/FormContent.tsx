@@ -20,12 +20,13 @@ export const FormContent = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault()
     if (taskText !== '') {
-      setTaskList([...taskList,
-      {
-        id: Date.now().toString(),
-        text: taskText,
-        isCompleted: isCompleted
-      }])
+      setTaskList([
+        {
+          id: Date.now().toString(),
+          text: taskText,
+          isCompleted: isCompleted
+        },
+        ...taskList,])
       setTaskText('')
     }
   }
